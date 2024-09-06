@@ -1,7 +1,10 @@
 # Minimal ~/.emacs.d - Emacs Starter Kit with Better Defaults and Optimized Startup
+![License](https://img.shields.io/github/license/jamescherti/be-quiet.el)
 ![](https://raw.githubusercontent.com/jamescherti/minimal-emacs.d/main/.images/made-for-gnu-emacs.svg)
 
-The **minimal-emacs.d** repository offers a starter kit with improved Emacs defaults and optimized startup, designed to serve as a robust foundation for your vanilla Emacs configuration and enhance your overall Emacs experience.
+The **minimal-emacs.d** starter kit provides improved Emacs defaults and optimized startup, intended to serve as a solid foundation for your vanilla Emacs configuration and enhance your overall Emacs experience.
+
+Creating `minimal-emacs.d` involved extensive research and testing to find the best parameters and optimizations for an Emacs init file. The concept behind `minimal-emacs.d` is to provide a clean, bloat-free starting point that you can build on according to your needs. **You have full control over what to include, allowing you to customize Emacs to your preferences.**
 
 The author is using **[minimal-emacs.d](https://github.com/jamescherti/minimal-emacs.d)** as his `early-init.el` and `init.el`. He is using 146 packages and his Emacs configuration starts in 0.22 seconds:
 ![](https://www.jamescherti.com/wp-content/uploads/minimal-emacs-startup-time.png)
@@ -17,8 +20,8 @@ The author is using **[minimal-emacs.d](https://github.com/jamescherti/minimal-e
 - [Customizations](#customizations)
     - [How to customize early-init.el and init.el?](#how-to-customize-early-initel-and-initel)
     - [Reducing clutter in `~/.emacs.d` by redirecting files to `~/emacs.d/var/`](#reducing-clutter-in-emacsd-by-redirecting-files-to-emacsdvar)
+    - [How to enable dialogs, context menu, tool-bar, menu-bar, and tooltips?](#how-to-enable-dialogs-context-menu-tool-bar-menu-bar-and-tooltips)
     - [How to activate recentf, savehist, saveplace, and auto-revert?](#how-to-activate-recentf-savehist-saveplace-and-auto-revert)
-    - [Optimization: How to automatically compile Emacs Lisp code (auto-compile)](#optimization-how-to-automatically-compile-emacs-lisp-code-auto-compile)
     - [Optimization: Native Compilation](#optimization-native-compilation)
     - [Optimization: How to activate the Garbage Collector Magic Hack (gcmh-mode)](#optimization-how-to-activate-the-garbage-collector-magic-hack-gcmh-mode)
     - [How to configure vterm](#how-to-configure-vterm)
@@ -27,10 +30,12 @@ The author is using **[minimal-emacs.d](https://github.com/jamescherti/minimal-e
     - [Configuring LSP Servers with Eglot (built-in)](#configuring-lsp-servers-with-eglot-built-in)
     - [Code completion with corfu](#code-completion-with-corfu)
     - [How to configure straight.el?](#how-to-configure-straightel)
+    - [Which other packages can be interesting to add?](#which-other-packages-can-be-interesting-to-add)
 - [Frequently asked questions](#frequently-asked-questions)
     - [How to increase gc-cons-threshold?](#how-to-increase-gc-cons-threshold)
     - [How to change the outline-mode or outline-minor-mode Ellipsis (...) to (▼)?](#how-to-change-the-outline-mode-or-outline-minor-mode-ellipsis--to-)
     - [How to run the minimal-emacs.d Emacs configuration from another directory?](#how-to-run-the-minimal-emacsd-emacs-configuration-from-another-directory)
+    - [How to make minimal-emacs.d use an environment variable for changing ~/.emacs.d to another directory?](#how-to-make-minimal-emacsd-use-an-environment-variable-for-changing-emacsd-to-another-directory)
     - [Are post-early-init.el and pre-init.el the same file in terms of the logic?](#are-post-early-initel-and-pre-initel-the-same-file-in-terms-of-the-logic)
 - [Author and license](#author-and-license)
 - [Links](#links)
@@ -87,6 +92,7 @@ git clone https://github.com/jamescherti/minimal-emacs.d ~/.emacs.d
 
 10. **Miscellaneous**
     - Configure recentf, savehist, and auto-save
+    - Configure Ediff to use a single frame and split windows horizontally
 
 ## Update
 
@@ -137,29 +143,6 @@ To prevent Emacs from saving customization information to a custom file, set `cu
 (setq custom-file null-device)
 ```
 
-### How to enable dialogs, context menu, tool-bar, menu-bar, and tooltips?
-
-To customize your Emacs setup to include various user interface elements, you can use the following settings in your ``~/.emacs.d/pre-early-init.el``:
-
-``` emacs-lisp
-;; Enable both file dialogs and dialog boxes
-(setq minimal-emacs-disable-dialogs nil)
-
-;; Enable context menu (right-click menu)
-(setq minimal-emacs-disable-context-menu nil)
-
-;; Enable the tool bar at the top
-(setq minimal-emacs-disable-tool-bar nil)
-
-;; Enable the menu bar at the top
-(setq minimal-emacs-disable-menu-bar nil)
-
-;; Enable tooltips (hover text)
-(setq minimal-emacs-disable-tooltips nil)
-```
-
-These settings control the visibility of dialogs, context menus, toolbars, menu bars, and tooltips.
-
 ### How to activate recentf, savehist, saveplace, and auto-revert?
 
 The recentf, savehist, saveplace, and auto-revert built-in packages are already configured by `minimal-emacs.d`. All you need to do is activate them by adding the following to `~/.emacs.d/post-init.el`:
@@ -186,42 +169,11 @@ The recentf, savehist, saveplace, and auto-revert built-in packages are already 
 (add-hook 'after-init-hook #'save-place-mode)
 ```
 
-### Optimization: How to automatically compile Emacs Lisp code (auto-compile)
-
-The auto-compile package automates the byte-compilation of Emacs Lisp files, ensuring that your code runs more efficiently by converting it to byte-code. This process reduces the load time and execution time of your Emacs configuration and other Lisp files, leading to faster performance. Additionally, auto-compile helps maintain an up-to-date and optimized configuration by recompiling files automatically when they are saved, eliminating the need for manual compilation and minimizing potential issues caused by outdated byte-code.
-
-To activate auto-compile, add the following to the beginning of `~/.emacs.d/post-init.el`, before all other `use-package` statements:
-``` emacs-lisp
-(use-package auto-compile
-  :demand t
-  :custom
-  (auto-compile-check-parens nil)
-  (auto-compile-display-buffer nil)
-  :config
-  (auto-compile-on-load-mode)
-  (auto-compile-on-save-mode))
-```
-
 ### Optimization: Native Compilation
 
 Check if native compilation is enabled by evaluating `(native-comp-available-p)` in Emacs. If the result is non-nil, it indicates that native compilation is active.
 
 Native compilation can greatly enhance performance by translating Emacs Lisp code into native machine code, leading to faster execution and improved responsiveness.
-
-### Optimization: How to activate the Garbage Collector Magic Hack (gcmh-mode)
-
-The Garbage Collector Magic Hack (gcmh-mode) optimizes Emacs' garbage collection process, reducing the frequency of garbage collection during normal operations and only performing it during idle times. This results in smoother performance and fewer interruptions, especially during intensive tasks or when working with large files.
-
-To activate gcmh-mode, add the following to the beginning of `~/.emacs.d/post-init.el`, before all other `use-package` statements:
-``` emacs-lisp
-(use-package gcmh
-  :ensure t
-  :hook (after-init . gcmh-mode)
-  :custom
-  (gcmh-idle-delay 'auto)
-  (gcmh-auto-idle-delay-factor 10)
-  (gcmh-low-cons-threshold minimal-emacs-gc-cons-threshold))
-```
 
 ### How to configure vterm
 
@@ -394,6 +346,8 @@ Configuring Vim keybindings in Emacs can greatly enhance your editing efficiency
   (setq evil-undo-system 'undo-fu)
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
+  :custom
+  (evil-want-Y-yank-to-eol t)
   :config
   (evil-select-search-module 'evil-search-module 'evil-search)
   (evil-mode 1))
@@ -576,14 +530,20 @@ To configure `corfu` and `cape`, add the following to `~/.emacs.d/post-init.el`:
   (add-hook 'completion-at-point-functions #'cape-elisp-block))
 ```
 
+### How to enable dialogs, context menu, tool-bar, menu-bar, and tooltips?
+
+To customize your Emacs setup to include various user interface elements, you can use the following settings in your ``~/.emacs.d/pre-early-init.el``:
+
+``` emacs-lisp
+(setq minimal-emacs-ui-features '(context-menu tool-bar menu-bar dialogs tooltips))
+```
+
+These settings control the visibility of dialogs, context menus, toolbars, menu bars, and tooltips.
+
 ### How to configure straight.el?
 
 [Add the straight.el bootstrap code](https://github.com/radian-software/straight.el?tab=readme-ov-file#getting-started) to `~/.emacs.d/pre-init.el`:
 ``` emacs-lisp
-;; Users of Emacs versions >= 27 will want to set
-;; package-enable-at-startup to nil
-(setq package-enable-at-startup nil)
-
 ;; Straight
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -646,6 +606,23 @@ emacs --init-directory ~/.config/minimal-emacs.d/
 ```
 
 This allows you to keep your Emacs setup organized in a specific location and easily switch between different configurations.
+
+### How to make minimal-emacs.d use an environment variable to change ~/.emacs.d to another directory?
+
+Add the following to the top of the `~/.emacs.d/pre-early-init.el` file to make `minimal-emacs.d` use the `MINIMAL_EMACS_USER_DIRECTORY` environment variable to change `~/.emacs.d` to another directory:
+```emacs-lisp
+;; Place this at the very beginning of pre-early-init.el
+(let ((previous-minimal-emacs-user-directory (expand-file-name
+                                              minimal-emacs-user-directory))
+      (env-dir (getenv "MINIMAL_EMACS_USER_DIRECTORY")))
+  (setq minimal-emacs-user-directory (if env-dir
+                                         (expand-file-name env-dir)
+                                       (expand-file-name user-emacs-directory)))
+  (unless (string= minimal-emacs-user-directory
+                   previous-minimal-emacs-user-directory)
+    ;; Load pre-early-init.el from the new directory
+    (minimal-emacs-load-user-init "pre-early-init.el")))
+```
 
 ### Are post-early-init.el and pre-init.el the same file in terms of the logic?
 
