@@ -1,100 +1,78 @@
-# Minimal ~/.emacs.d - Emacs Starter Kit with Better Defaults and Optimized Startup
+# Minimal ~/.emacs.d - Vanilla Emacs Configuration with Better Defaults and Optimized Startup
 ![License](https://img.shields.io/github/license/jamescherti/be-quiet.el)
 ![](https://raw.githubusercontent.com/jamescherti/minimal-emacs.d/main/.images/made-for-gnu-emacs.svg)
 
-The **minimal-emacs.d** starter kit provides improved Emacs defaults and optimized startup, intended to serve as a solid foundation for your vanilla Emacs configuration and enhance your overall Emacs experience.
+The `minimal-emacs.d` project is a customizable Emacs base that provides **better Emacs defaults and optimized startup**, intended to serve as a solid foundation for your vanilla Emacs configuration.
 
-Creating `minimal-emacs.d` involved extensive research and testing to find the best parameters and optimizations for an Emacs init file. The concept behind `minimal-emacs.d` is to provide a clean, bloat-free starting point that you can build on according to your needs. **You have full control over what to include, allowing you to customize Emacs to your preferences.**
+Creating `minimal-emacs.d` (`init.el` and `early-init.el`) involved extensive research and testing to find the best parameters and optimizations for an Emacs init file. The concept behind `minimal-emacs.d` is to provide a clean, bloat-free, optimized base.
+
+By default, only essential features are enabled, providing a minimal base that is optimized. From there, users are encouraged to consult this README.md to customize and extend the configuration based on their specific needs.
 
 The author is using **[minimal-emacs.d](https://github.com/jamescherti/minimal-emacs.d)** as his `early-init.el` and `init.el`. He is using 146 packages and his Emacs configuration starts in 0.22 seconds:
 ![](https://www.jamescherti.com/wp-content/uploads/minimal-emacs-startup-time.png)
 
+A [user commented on Reddit](https://www.reddit.com/r/emacs/comments/1feaf37/comment/lmw7ijd/) that after switching to `minimal-emacs.d`, their configuration execution time decreased from 3 seconds to just 1 second by simply replacing their `init.el` and `early-init.el` files with those from the project. Please [send me](https://www.jamescherti.com/contact/) your feedback and I'll add it to this README.md file.
+
 (The optimizations in `minimal-emacs.d` significantly contribute to speeding up Emacs startup. Additional factors include deferring package loading when not necessary on startup by using `:defer t` with `use-package`, and byte-compiling and native-compiling all `.el` files. The author also regularly uses `M-x list-timers` and `M-x describe-mode` for each file type to ensure only essential modes and timers are active, which helps optimize Emacs' performance.)
 
-## Table of contents
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
 
-- [Installation](#installation)
-- [Features](#features)
-- [Update](#update)
-- [Customizations](#customizations)
-    - [How to customize early-init.el and init.el?](#how-to-customize-early-initel-and-initel)
-    - [Reducing clutter in `~/.emacs.d` by redirecting files to `~/emacs.d/var/`](#reducing-clutter-in-emacsd-by-redirecting-files-to-emacsdvar)
-    - [How to enable dialogs, context menu, tool-bar, menu-bar, and tooltips?](#how-to-enable-dialogs-context-menu-tool-bar-menu-bar-and-tooltips)
-    - [How to activate recentf, savehist, saveplace, and auto-revert?](#how-to-activate-recentf-savehist-saveplace-and-auto-revert)
-    - [Optimization: Native Compilation](#optimization-native-compilation)
-    - [Optimization: How to activate the Garbage Collector Magic Hack (gcmh-mode)](#optimization-how-to-activate-the-garbage-collector-magic-hack-gcmh-mode)
-    - [How to configure vterm](#how-to-configure-vterm)
-    - [How to configure Vertico, Consult, and Embark](#how-to-configure-vertico-consult-and-embark)
-    - [How to configure Vim keybindings using Evil?](#how-to-configure-vim-keybindings-using-evil)
-    - [Configuring LSP Servers with Eglot (built-in)](#configuring-lsp-servers-with-eglot-built-in)
-    - [Code completion with corfu](#code-completion-with-corfu)
-    - [How to configure straight.el?](#how-to-configure-straightel)
-    - [Which other packages can be interesting to add?](#which-other-packages-can-be-interesting-to-add)
-- [Frequently asked questions](#frequently-asked-questions)
-    - [How to increase gc-cons-threshold?](#how-to-increase-gc-cons-threshold)
-    - [How to change the outline-mode or outline-minor-mode Ellipsis (...) to (▼)?](#how-to-change-the-outline-mode-or-outline-minor-mode-ellipsis--to-)
-    - [How to run the minimal-emacs.d Emacs configuration from another directory?](#how-to-run-the-minimal-emacsd-emacs-configuration-from-another-directory)
-    - [How to make minimal-emacs.d use an environment variable for changing ~/.emacs.d to another directory?](#how-to-make-minimal-emacsd-use-an-environment-variable-for-changing-emacsd-to-another-directory)
-    - [Are post-early-init.el and pre-init.el the same file in terms of the logic?](#are-post-early-initel-and-pre-initel-the-same-file-in-terms-of-the-logic)
-- [Author and license](#author-and-license)
-- [Links](#links)
+- [Minimal ~/.emacs.d - Vanilla Emacs Configuration with Better Defaults and Optimized Startup](#minimal-emacsd---vanilla-emacs-configuration-with-better-defaults-and-optimized-startup)
+    - [Install minimal-emacs.d](#install-minimal-emacsd)
+        - [Installation into ~/.emacs.d](#installation-into-emacsd)
+        - [Alternative: Installation in `~/.minimal-emacs.d`](#alternative-installation-in-minimal-emacsd)
+    - [Update minimal-emacs.d](#update-minimal-emacsd)
+    - [Customizations](#customizations)
+        - [How to customize early-init.el and init.el?](#how-to-customize-early-initel-and-initel)
+        - [How to enable the menu-bar, the tool-bar, dialogs, the contextual menu, and tooltips?](#how-to-enable-the-menu-bar-the-tool-bar-dialogs-the-contextual-menu-and-tooltips)
+        - [Reducing clutter in `~/.emacs.d` by redirecting files to `~/emacs.d/var/`](#reducing-clutter-in-emacsd-by-redirecting-files-to-emacsdvar)
+        - [How to activate recentf, savehist, saveplace, and auto-revert?](#how-to-activate-recentf-savehist-saveplace-and-auto-revert)
+        - [Optimization: Native Compilation](#optimization-native-compilation)
+        - [How to configure vterm](#how-to-configure-vterm)
+        - [How to configure Vertico, Consult, and Embark](#how-to-configure-vertico-consult-and-embark)
+        - [How to configure Vim keybindings using Evil?](#how-to-configure-vim-keybindings-using-evil)
+        - [Configuring LSP Servers with Eglot (built-in)](#configuring-lsp-servers-with-eglot-built-in)
+        - [Code completion with corfu](#code-completion-with-corfu)
+        - [How to configure straight.el?](#how-to-configure-straightel)
+        - [Which other packages can be interesting to add?](#which-other-packages-can-be-interesting-to-add)
+    - [Frequently asked questions](#frequently-asked-questions)
+        - [How to increase gc-cons-threshold?](#how-to-increase-gc-cons-threshold)
+        - [How to change the outline-mode or outline-minor-mode Ellipsis (...) to (▼)?](#how-to-change-the-outline-mode-or-outline-minor-mode-ellipsis--to-)
+        - [How to make minimal-emacs.d use an environment variable to change ~/.emacs.d to another directory?](#how-to-make-minimal-emacsd-use-an-environment-variable-to-change-emacsd-to-another-directory)
+        - [Are post-early-init.el and pre-init.el the same file in terms of the logic?](#are-post-early-initel-and-pre-initel-the-same-file-in-terms-of-the-logic)
+        - [Why the reflexive disabling of the menu bar?](#why-the-reflexive-disabling-of-the-menu-bar)
+        - [Why did the author develop minimal-emacs.d?](#why-did-the-author-develop-minimal-emacsd)
+    - [Features](#features)
+    - [Author and license](#author-and-license)
+    - [Links](#links)
 
 <!-- markdown-toc end -->
 
-## Installation
+## Install minimal-emacs.d
+
+### Installation into ~/.emacs.d
 
 Execute the following command to clone this repository into `~/.emacs.d`:
 ```
 git clone https://github.com/jamescherti/minimal-emacs.d ~/.emacs.d
 ```
 
-## Features
+### Alternative: Installation in `~/.minimal-emacs.d`
 
-1. **Performance Improvements:**
-   - Increases the amount read from processes in a single chunk.
-   - Prefers loading newer compiled files.
-   - Reduces startup screen and message noise, including removing the "For information about GNU Emacs..." message.
-   - Configures Emacs to start with a scratch buffer in `fundamental-mode` to shave seconds off startup time.
-   - Delays garbage collection during startup to improve performance and resets it to a more reasonable value once Emacs has started.
-   - Customizes `file-name-handler-alist` for improved startup time and package load time (Special thanks to the Doom Emacs developers for the `file-name-handler-alist` optimizations; This function have been inspired by their project and will contribute to improving vanilla Emacs configurations.)
-   - Reduces rendering workload by not rendering cursors or regions in non-focused windows.
-   - Disables warnings from the legacy advice API and suppresses warnings about aliased variables.
-   - Avoids unnecessary excessive UI updates.
-   - Disables font compacting to avoid high memory usage.
-   - Defer tool bar setup
-   - Unset command line options irrelevant to the current OS
+To install `minimal-emacs.d` in a non-default directory, use the `--init-directory` Emacs option to specify your desired configuration path. For example, to install `minimal-emacs.d` in `~/.minimal-emacs.d/`, follow these steps:
 
-2. **Native Compilation and Byte Compilation:**
-   - Configures native compilation and byte compilation settings
-   - Suppresses compiler warnings and errors during native compilation.
+1. Clone the repository into `~/.minimal-emacs.d/` using:
+   ```
+   git clone https://github.com/jamescherti/minimal-emacs.d ~/.minimal-emacs.d
+   ```
 
-4. **UI Element Management:**
-   - Disables the startup screen and messages, including menu bar, tool bar, and scroll bars.
-   - Configures Emacs to avoid resizing frames and minimizes unnecessary UI updates.
+2. Start Emacs with the new configuration directory:
+   ```
+   emacs --init-directory ~/.minimal-emacs.d/
+   ```
 
-5. **Package Management:**
-   - Configures package archives and priorities for MELPA, ELPA, and other repositories.
-
-6. **Customizable Initialization Files:**
-   - Supports additional configuration files (`pre-init.el`, `post-init.el`, `pre-early-init.el`, and `post-early-init.el`) to allow further customization at different stages of the startup process.
-
-7. **File Management:**
-   - Manages auto-save and backup files, including backup options and version control settings.
-
-8. **User Experience Enhancements:**
-   - Configures user interface settings such as cursor behavior, scrolling, and response to prompts.
-   - Disables beeping and blinking to avoid distractions.
-
-9. **Buffer and Window Configuration:**
-   - Sets default fringe widths and buffer boundaries.
-   - Configures smooth scrolling and cursor behavior for a more seamless editing experience.
-
-10. **Miscellaneous**
-    - Configure recentf, savehist, and auto-save
-    - Configure Ediff to use a single frame and split windows horizontally
-
-## Update
+## Update minimal-emacs.d
 
 To keep your Emacs configuration up to date, you can pull the latest changes from the repository. Run the following command in your terminal:
 
@@ -123,6 +101,18 @@ Always begin your `pre-init.el`, `post-init.el`, `post-early-init.el`, and `pre-
 ```
 
 (Replace `FILENAME.el` with the actual name and DESCRIPTION with a brief description of its purpose.)
+
+### How to enable the menu-bar, the tool-bar, dialogs, the contextual menu, and tooltips?
+
+**Note:** Enabling the tool-bar, menu-bar, and similar UI elements may slightly increase your startup time.
+
+To customize your Emacs setup to include various user interface elements, you can use the following settings in your ``~/.emacs.d/pre-early-init.el``:
+
+``` emacs-lisp
+(setq minimal-emacs-ui-features '(context-menu tool-bar menu-bar dialogs tooltips))
+```
+
+These settings control the visibility of dialogs, context menus, toolbars, menu bars, and tooltips.
 
 ### Reducing clutter in `~/.emacs.d` by redirecting files to `~/emacs.d/var/`
 
@@ -530,16 +520,6 @@ To configure `corfu` and `cape`, add the following to `~/.emacs.d/post-init.el`:
   (add-hook 'completion-at-point-functions #'cape-elisp-block))
 ```
 
-### How to enable dialogs, context menu, tool-bar, menu-bar, and tooltips?
-
-To customize your Emacs setup to include various user interface elements, you can use the following settings in your ``~/.emacs.d/pre-early-init.el``:
-
-``` emacs-lisp
-(setq minimal-emacs-ui-features '(context-menu tool-bar menu-bar dialogs tooltips))
-```
-
-These settings control the visibility of dialogs, context menus, toolbars, menu bars, and tooltips.
-
 ### How to configure straight.el?
 
 [Add the straight.el bootstrap code](https://github.com/radian-software/straight.el?tab=readme-ov-file#getting-started) to `~/.emacs.d/pre-init.el`:
@@ -589,24 +569,6 @@ Add the following to `~/.emacs.d/pre-early-init.el` to ensure that `minimal-emac
 
 If you want to to change the outline-mode or outline-minor-mode Ellipsis (...) to (▼), use the code snippet in this article: [Changing the Ellipsis (“…”) in outline-mode and outline-minor-mode](https://www.jamescherti.com/emacs-customize-ellipsis-outline-minor-mode/).
 
-### How to run the minimal-emacs.d Emacs configuration from another directory?
-
-To run minimal-emacs.d from a different directory, you can specify the path to your configuration directory using the --init-directory option.
-
-For example, to run Emacs with the configuration located in `~/.config/minimal-emacs.d/`, follow these steps:
-
-1. Clone the repository into ~/.config/minimal-emacs.d/ using:
-```
-git clone https://github.com/jamescherti/minimal-emacs.d ~/.config/minimal-emacs.d
-```
-
-2. Start Emacs with the specified configuration directory:
-```
-emacs --init-directory ~/.config/minimal-emacs.d/
-```
-
-This allows you to keep your Emacs setup organized in a specific location and easily switch between different configurations.
-
 ### How to make minimal-emacs.d use an environment variable to change ~/.emacs.d to another directory?
 
 Add the following to the top of the `~/.emacs.d/pre-early-init.el` file to make `minimal-emacs.d` use the `MINIMAL_EMACS_USER_DIRECTORY` environment variable to change `~/.emacs.d` to another directory:
@@ -629,6 +591,69 @@ Add the following to the top of the `~/.emacs.d/pre-early-init.el` file to make 
 During the execution of `early-init.el` (and `pre-early-init.el` and  `post-early-init.el`), Emacs has not yet loaded the graphical user interface (GUI). This file is used for configurations that need to be applied before the GUI is initialized, such as settings that affect the early stages of the Emacs startup process.
 
 Thus, `post-early-init.el` and `pre-init.el` serve different purposes and are not the same.
+
+### Why the reflexive disabling of the menu bar?
+
+The menu bar is disabled by default in `minimal-emacs.d` to provide a minimal, distraction-free environment, which many experienced users prefer.
+
+The menu bar can be re-enabled by adding the following configuration to `~/.emacs.d/pre-early-init.el`:
+```
+(setq minimal-emacs-ui-features '(menu-bar))
+```
+
+Other UI features can also be enabled by adding the following to `~/.emacs.d/pre-early-init.el`:
+```
+(setq minimal-emacs-ui-features '(context-menu tool-bar menu-bar dialogs tooltips))
+```
+
+### Why did the author develop minimal-emacs.d?
+
+The author began working on it after realizing that no existing starter kit offered a truly minimal setup with the flexibility for users to choose exactly what to include in their configuration.
+
+## Features
+
+1. **Performance Improvements:**
+   - Increases the amount read from processes in a single chunk.
+   - Prefers loading newer compiled files.
+   - Reduces startup screen and message noise, including removing the "For information about GNU Emacs..." message.
+   - Configures Emacs to start with a scratch buffer in `fundamental-mode` to shave seconds off startup time.
+   - Delays garbage collection during startup to improve performance and resets it to a more reasonable value once Emacs has started.
+   - Customizes `file-name-handler-alist` for improved startup time and package load time (Special thanks to the Doom Emacs developers for the `file-name-handler-alist` optimizations; This function have been inspired by their project and will contribute to improving vanilla Emacs configurations.)
+   - Reduces rendering workload by not rendering cursors or regions in non-focused windows.
+   - Disables warnings from the legacy advice API and suppresses warnings about aliased variables.
+   - Avoids unnecessary excessive UI updates.
+   - Disables font compacting to avoid high memory usage.
+   - Defer tool bar setup
+   - Unset command line options irrelevant to the current OS
+
+2. **Native Compilation and Byte Compilation:**
+   - Configures native compilation and byte compilation settings
+   - Suppresses compiler warnings and errors during native compilation.
+
+4. **UI Element Management:**
+   - Disables the startup screen and messages, including menu bar, tool bar, and scroll bars.
+   - Configures Emacs to avoid resizing frames and minimizes unnecessary UI updates.
+
+5. **Package Management:**
+   - Configures package archives and priorities for MELPA, ELPA, and other repositories.
+
+6. **Customizable Initialization Files:**
+   - Supports additional configuration files (`pre-init.el`, `post-init.el`, `pre-early-init.el`, and `post-early-init.el`) to allow further customization at different stages of the startup process.
+
+7. **File Management:**
+   - Manages auto-save and backup files, including backup options and version control settings.
+
+8. **User Experience Enhancements:**
+   - Configures user interface settings such as cursor behavior, scrolling, and response to prompts.
+   - Disables beeping and blinking to avoid distractions.
+
+9. **Buffer and Window Configuration:**
+   - Sets default fringe widths and buffer boundaries.
+   - Configures smooth scrolling and cursor behavior for a more seamless editing experience.
+
+10. **Miscellaneous**
+    - Configure recentf, savehist, and auto-save
+    - Configure Ediff to use a single frame and split windows horizontally
 
 ## Author and license
 
