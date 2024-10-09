@@ -17,6 +17,11 @@
 ;;; Load pre-init.el
 (minimal-emacs-load-user-init "pre-init.el")
 
+;;; Networking
+
+;; Don't ping things that look like domain names.
+(setq ffap-machine-p-known 'reject)
+
 ;;; package.el
 (when (bound-and-true-p minimal-emacs-package-initialize-and-refresh)
   ;; Initialize and refresh package contents again if needed
@@ -34,6 +39,22 @@
 
 ;; Ensure the 'use-package' package is installed and loaded
 
+;;; Features, warnings, and errors
+
+;; Disable warnings from the legacy advice API. They aren't useful.
+(setq ad-redefinition-action 'accept)
+
+(setq warning-suppress-types '((lexical-binding)))
+
+;; Some features that are not represented as packages can be found in
+;; `features', but this can be inconsistent. The following enforce consistency:
+(if (fboundp #'json-parse-string)
+    (push 'jansson features))
+(if (string-match-p "HARFBUZZ" system-configuration-features) ; no alternative
+    (push 'harfbuzz features))
+(if (bound-and-true-p module-file-suffix)
+    (push 'dynamic-modules features))
+
 ;;; Minibuffer
 ;; Allow nested minibuffers
 (setq enable-recursive-minibuffers t)
@@ -43,6 +64,17 @@
       '(read-only t intangible t cursor-intangible t face
                   minibuffer-prompt))
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+;;; User interface
+
+;; By default, Emacs "updates" its ui more often than it needs to
+(setq idle-update-delay 1.0)
+
+;; Allow for shorter responses: "y" for yes and "n" for no.
+(if (boundp 'use-short-answers)
+    (setq use-short-answers t)
+  (advice-add #'yes-or-no-p :override #'y-or-n-p))
+(defalias #'view-hello-file #'ignore)  ; Never show the hello file
 
 ;;; Misc
 
@@ -75,11 +107,11 @@
 
 (setq truncate-string-ellipsis "…")
 
-;; Configure Emacs to ask for confirmation before exiting
-(setq confirm-kill-emacs 'y-or-n-p)
-
 ;; Delete by moving to trash in interactive mode
 (setq delete-by-moving-to-trash (not noninteractive))
+
+;; Increase how much is read from processes in a single chunk (default is 4kb).
+(setq read-process-output-max (* 512 1024))  ; 512kb
 
 ;;; Files
 
@@ -248,6 +280,11 @@
 ;; Don't stretch the cursor to fit wide characters, it is disorienting,
 ;; especially for tabs.
 (setq x-stretch-cursor nil)
+
+;; Reduce rendering/line scan work by not rendering cursors or regions in
+;; non-focused windows.
+(setq-default cursor-in-non-selected-windows nil)
+(setq highlight-nonselected-windows nil)
 
 ;;; Annoyances
 

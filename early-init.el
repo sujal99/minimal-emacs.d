@@ -62,22 +62,6 @@ When set to non-nil, Emacs will automatically call `package-initialize' and
       (expand-file-name "themes/" minimal-emacs-user-directory))
 (setq custom-file (expand-file-name "custom.el" minimal-emacs-user-directory))
 
-;;; Misc
-
-(set-language-environment "UTF-8")
-
-;; Set-language-environment sets default-input-method, which is unwanted.
-(setq default-input-method nil)
-
-;; Some features that are not represented as packages can be found in
-;; `features', but this can be inconsistent. The following enforce consistency:
-(if (fboundp #'json-parse-string)
-    (push 'jansson features))
-(if (string-match-p "HARFBUZZ" system-configuration-features) ; no alternative
-    (push 'harfbuzz features))
-(if (bound-and-true-p module-file-suffix)
-    (push 'dynamic-modules features))
-
 ;;; Garbage collection
 ;; Garbage collection significantly affects startup times. This setting delays
 ;; garbage collection during startup but will be reset later.
@@ -88,29 +72,17 @@ When set to non-nil, Emacs will automatically call `package-initialize' and
           (lambda ()
             (setq gc-cons-threshold minimal-emacs-gc-cons-threshold)))
 
+;;; Misc
+
+(set-language-environment "UTF-8")
+
+;; Set-language-environment sets default-input-method, which is unwanted.
+(setq default-input-method nil)
+
 ;;; Performance
 
 ;; Prefer loading newer compiled files
 (setq load-prefer-newer t)
-
-;; Increase how much is read from processes in a single chunk (default is 4kb).
-(setq read-process-output-max (* 512 1024))  ; 512kb
-
-;; Reduce rendering/line scan work by not rendering cursors or regions in
-;; non-focused windows.
-(setq-default cursor-in-non-selected-windows nil)
-(setq highlight-nonselected-windows nil)
-
-;; Disable warnings from the legacy advice API. They aren't useful.
-(setq ad-redefinition-action 'accept)
-
-(setq warning-suppress-types '((lexical-binding)))
-
-;; Don't ping things that look like domain names.
-(setq ffap-machine-p-known 'reject)
-
-;; By default, Emacs "updates" its ui more often than it needs to
-(setq idle-update-delay 1.0)
 
 ;; Font compacting can be very resource-intensive, especially when rendering
 ;; icon fonts on Windows. This will increase memory usage.
@@ -293,12 +265,6 @@ When set to non-nil, Emacs will automatically call `package-initialize' and
 (unless (memq 'dialogs minimal-emacs-ui-features)
   (setq use-file-dialog nil)
   (setq use-dialog-box nil))
-
-;; Allow for shorter responses: "y" for yes and "n" for no.
-(if (boundp 'use-short-answers)
-    (setq use-short-answers t)
-  (advice-add #'yes-or-no-p :override #'y-or-n-p))
-(defalias #'view-hello-file #'ignore)  ; Never show the hello file
 
 ;;; package.el
 (setq package-enable-at-startup nil)
