@@ -1,11 +1,12 @@
 ;;; org-mode.el --- org-mode -*-  no-byte-compile: t; lexical-binding: t; -*-
 
 
-(defvar sjlg/org-directory  "~/my-drive/orgfiles" "Choose org file directory.")
-(defvar sjlg/inbox-file (expand-file-name "inbox.org" sjlg/org-directory) "New stuff collects in this file.")
+(defvar sjlg/org-directory  "~/my-drive/orgfiles" "org file directory.")
+(defvar sjlg/org-roam-dir  "~/my-drive/orgfiles/roam" "org roam file directory.")
+(defvar sjlg/inbox-file (expand-file-name "inbox.org" sjlg/org-roam-dir) "New stuff collects in this file.")
 
 
-(setq-default org-agenda-files (list sjlg/org-directory))
+(setq-default org-agenda-files (list sjlg/org-roam-dir))
 
 ;; TODO FACES
 (defface sjlg/org-todo-active
@@ -222,7 +223,7 @@
   :diminish
   :custom
   (org-roam-db-location (file-truename "~/org-roam.db"))
-  (org-roam-directory (file-truename sjlg/org-directory))
+  (org-roam-directory (file-truename sjlg/org-roam-dir))
   (org-roam-dailies-directory "daily/")
   (org-roam-node-display-template (concat "${title:40} " (propertize "${tags:50}" 'face 'org-tag) "${file:50}"))
   (org-roam-capture-templates
