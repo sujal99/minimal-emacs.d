@@ -431,6 +431,14 @@ You can also add the following code to enable commenting and uncommenting by pre
   (evil-define-key 'normal 'global (kbd "gc") 'my-evil-comment-or-uncomment))
 ```
 
+Evil-snipe provides 2-character motions for quickly jumping around text compared to Evil's built-in f/F/t/T motions, incrementally highlighting candidate targets as you type. By default, snipe only binds s (forward) and S (backward) to evil-snipe-s and evil-snipe-S, respectively. In operator mode, snipe is bound to z/Z and x/X (exclusive):
+``` emacs-lisp
+(use-package evil-snipe
+  :defer t
+  :commands evil-snipe-mode
+  :hook (after-init . evil-snipe-mode))
+```
+
 ### Configuring LSP Servers with Eglot (built-in)
 
 To set up Language Server Protocol (LSP) servers using Eglot, you can configure it in your Emacs setup as follows. This configuration ensures minimal disruption from Eglot’s progress reporting and optimizes performance by disabling unnecessary logging.
@@ -560,7 +568,19 @@ Add the following to `~/.emacs.d/post-init.el`:
 
 ;; Configure Emacs to ask for confirmation before exiting
 (setq confirm-kill-emacs 'y-or-n-p)
+
+(use-package uniquify
+  :ensure nil
+  :custom
+  (uniquify-buffer-name-style 'reverse)
+  (uniquify-separator "•")
+  (uniquify-after-kill-buffer-p t)
+  (uniquify-ignore-buffers-re "^\\*"))
 ```
+
+It is also recommended to read the following articles:
+- [Automating Table of Contents Update for Markdown Documents (e.g., README.md)](https://www.jamescherti.com/emacs-markdown-table-of-contents-update-before-save/)
+- [Maintaining proper indentation in indentation-sensitive programming languages](https://www.jamescherti.com/elisp-code-and-emacs-packages-for-maintaining-proper-indentation-in-indentation-sensitive-languages-such-as-python-or-yaml/)
 
 ## Frequently asked questions
 
