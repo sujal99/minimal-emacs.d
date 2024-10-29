@@ -242,34 +242,36 @@
 ;; window.
 (setq scroll-preserve-screen-position t)
 
-;;; Mouse
+;; Setting `scroll-conservatively' to a high number like 10000 makes Emacs only
+;; scroll a little bit to bring your cursor back into view, minimizing
+;; unnecessary page movements.
+(setq scroll-conservatively 10000)
+
+;; Enables smooth scrolling by making Emacs scroll the window by 1 line whenever
+;; the cursor moves off the visible screen.
+(setq scroll-step 1)
+
+;; Reduce cursor lag by :
+;; 1. Prevent automatic adjustments to `window-vscroll' for long lines.
+;; 2. Resolve the issue of random half-screen jumps during scrolling.
+(setq auto-window-vscroll nil)
+
+;; Number of lines of margin at the top and bottom of a window.
+(setq scroll-margin 0)
+
+;; Horizontal scrolling
+(setq hscroll-margin 2
+      hscroll-step 1)
+
+;;; Mouse Scroll
+
+(setq mouse-wheel-scroll-amount '(1 ((shift) . hscroll))
+      mouse-wheel-scroll-amount-horizontal 1)
 
 ;; Emacs 29
 (when (memq 'context-menu minimal-emacs-ui-features)
   (when (and (display-graphic-p) (fboundp 'context-menu-mode))
     (add-hook 'after-init-hook #'context-menu-mode)))
-
-(setq hscroll-margin 2
-      hscroll-step 1
-      ;; Emacs spends excessive time recentering the screen when the cursor
-      ;; moves more than N lines past the window edges (where N is the value of
-      ;; `scroll-conservatively`). This can be particularly slow in larger files
-      ;; during extensive scrolling. If `scroll-conservatively` is set above
-      ;; 100, the window is never automatically recentered. The default value of
-      ;; 0 triggers recentering too aggressively. Setting it to 10 reduces
-      ;; excessive recentering and only recenters the window when scrolling
-      ;; significantly off-screen.
-      scroll-conservatively 10
-      scroll-margin 0
-      scroll-preserve-screen-position t
-      ;; Reduce cursor lag by preventing automatic adjustments to
-      ;; `window-vscroll' for unusually long lines. Setting
-      ;; `auto-window-vscroll' it to nil also resolves the issue of random
-      ;; half-screen jumps during scrolling.
-      auto-window-vscroll nil
-      ;; Mouse
-      mouse-wheel-scroll-amount '(1 ((shift) . hscroll))
-      mouse-wheel-scroll-amount-horizontal 1)
 
 ;;; Cursor
 ;; The blinking cursor is distracting and interferes with cursor settings in
