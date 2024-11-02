@@ -188,6 +188,8 @@ Vertico, Consult, and Embark collectively enhance Emacs' completion and navigati
 
 Add the following to `~/.emacs.d/post-init.el` to set up Vertico, Consult, and Embark:
 ``` emacs-lisp
+;; Tip: You can remove the `vertico-mode' use-package and replace it
+;;      with the built-in `fido-vertical-mode'.
 (use-package vertico
   ;; (Note: It is recommended to also enable the savehist package.)
   :ensure t
@@ -552,7 +554,9 @@ To configure `corfu` and `cape`, add the following to `~/.emacs.d/post-init.el`:
 
 ### Which other customizations can be interesting to add?
 
-Add the following to `~/.emacs.d/post-init.el`:
+1. Read the following article from the same author: [Essential Emacs Packages for Efficient Software Development and Text Editing](https://www.jamescherti.com/essential-emacs-packages/)
+
+2. You can also add the following to `~/.emacs.d/post-init.el`:
 ``` emacs-lisp
 (use-package which-key
   :ensure t
