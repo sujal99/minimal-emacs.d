@@ -145,8 +145,6 @@
       window-divider-default-places t
       window-divider-default-right-width 1)
 
-(add-hook 'after-init-hook #'window-divider-mode)
-
 ;;; Backup files
 
 ;; Avoid generating backups or lockfiles to prevent creating world-readable
@@ -264,9 +262,6 @@
       hscroll-step 1)
 
 ;;; Mouse Scroll
-
-(setq mouse-wheel-scroll-amount '(1 ((shift) . hscroll))
-      mouse-wheel-scroll-amount-horizontal 1)
 
 ;; Emacs 29
 (when (memq 'context-menu minimal-emacs-ui-features)
