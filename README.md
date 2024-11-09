@@ -557,6 +557,8 @@ To configure `corfu` and `cape`, add the following to `~/.emacs.d/post-init.el`:
 
 [Add the elpaca bootstrap code](https://github.com/progfolio/elpaca?tab=readme-ov-file#installer) to `~/.emacs.d/pre-init.el`:
 ``` elisp
+(setq package-enable-at-startup nil)
+
 (defvar elpaca-installer-version 0.8)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
@@ -595,6 +597,10 @@ To configure `corfu` and `cape`, add the following to `~/.emacs.d/post-init.el`:
     (load "./elpaca-autoloads")))
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
+
+;; Optional: Install use-package support
+(elpaca elpaca-use-package
+  (elpaca-use-package-mode))
 ```
 
 ### Which other customizations can be interesting to add?
@@ -603,6 +609,9 @@ To configure `corfu` and `cape`, add the following to `~/.emacs.d/post-init.el`:
 
 2. You can also add the following to `~/.emacs.d/post-init.el`:
 ``` emacs-lisp
+;; Hide warnings and display only errors
+(setq warning-minimum-level :error)
+
 (use-package which-key
   :ensure t
   :config
