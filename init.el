@@ -117,6 +117,11 @@
 ;; multiple sources provide it. It concatenates the results.
 (setq eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly)
 
+;; For some reason, `abbrev_defs` is located in ~/.emacs.d/abbrev_defs, even
+;; when `user-emacs-directory` is modified. This ensures the abbrev file is
+;; correctly located based on the updated `user-emacs-directory`.
+(setq abbrev-file-name (expand-file-name "abbrev_defs" user-emacs-directory))
+
 ;;; Files
 
 ;; Disable the warning "X and Y are the same file". Ignoring this warning is
@@ -301,6 +306,10 @@
 ;; `delete-pair'. A longer delay can be annoying as it causes a noticeable pause
 ;; after each deletion, disrupting the flow of editing.
 (setq delete-pair-blink-delay 0.03)
+
+;; Ensure window-start is never invisible. This enhances user experience when
+;; folding/unfolding code (outline, org-mode, outline-minor-mode...)
+(setq-default make-window-start-visible t)
 
 ;;; Indent and formatting
 (setq-default left-fringe-width  8)

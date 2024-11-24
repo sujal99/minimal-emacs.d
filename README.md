@@ -2,67 +2,72 @@
 ![License](https://img.shields.io/github/license/jamescherti/be-quiet.el)
 ![](https://raw.githubusercontent.com/jamescherti/minimal-emacs.d/main/.images/made-for-gnu-emacs.svg)
 
-The `minimal-emacs.d` project is a customizable Emacs base that provides **better Emacs defaults and optimized startup**, intended to serve as a solid foundation for a vanilla Emacs configuration.
+The **minimal-emacs.d** project is a customizable Emacs base that provides **better Emacs defaults and optimized startup**, intended to serve as a solid foundation for a vanilla Emacs configuration.
 
-Creating `minimal-emacs.d` (`init.el` and `early-init.el`) involved extensive research and testing to find the best parameters and optimizations for an Emacs init file. The concept behind `minimal-emacs.d` is to provide a clean, bloat-free, optimized base.
+Creating *minimal-emacs.d* `init.el` and `early-init.el` involved extensive research and testing to find the best parameters and optimizations for an Emacs init file. The concept behind *minimal-emacs.d* is to provide a clean, bloat-free, fast base.
 
-By default, only essential features are enabled, providing a minimal base that is optimized. From there, users are encouraged to consult this README.md to customize and extend the configuration based on their specific needs.
+By default, only essential features are enabled, providing a minimal base that is optimized. From there, users are encouraged to consult this README.md to customize and extend the configuration based on their specific needs. (Read: [Never modify init.el and early-init.el. Modify these instead...](#never-modify-initel-and-early-initel-modify-these-instead))
 
 The author is using **[minimal-emacs.d](https://github.com/jamescherti/minimal-emacs.d)** as his `early-init.el` and `init.el`. He is using 146 packages and his Emacs configuration starts in 0.22 seconds:
 ![](https://www.jamescherti.com/wp-content/uploads/minimal-emacs-startup-time.png)
 
-A [user commented on Reddit](https://www.reddit.com/r/emacs/comments/1feaf37/comment/lmw7ijd/) that after switching to `minimal-emacs.d`, their configuration execution time decreased from 3 seconds to just 1 second by simply replacing their `init.el` and `early-init.el` files with those from the project. Please [send me](https://www.jamescherti.com/contact/) your feedback and I'll add it to this README.md file.
-
-(The optimizations in `minimal-emacs.d` significantly contribute to speeding up Emacs startup. Additional factors include deferring package loading when not necessary on startup by using `:defer t` with `use-package`, and byte-compiling and native-compiling all `.el` files. The author also regularly uses `M-x list-timers` and `M-x describe-mode` for each file type to ensure only essential modes and timers are active, which helps optimize Emacs' performance.)
+(The optimizations in *minimal-emacs.d* significantly contribute to speeding up Emacs startup. Additional factors include deferring package loading when not necessary on startup by using `:defer t` with `use-package`, and using [compile-angel](https://github.com/jamescherti/compile-angel.el) to ensure all `.el` files are byte-compiled and native-compiled. The author also regularly uses `M-x list-timers` and `M-x describe-mode` for each file type to ensure only essential modes and timers are active, which helps optimize Emacs' performance)
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
 
 - [Minimal ~/.emacs.d - Vanilla Emacs Configuration with Better Defaults and Optimized Startup](#minimal-emacsd---vanilla-emacs-configuration-with-better-defaults-and-optimized-startup)
-    - [Install minimal-emacs.d](#install-minimal-emacsd)
-        - [Installation into ~/.emacs.d](#installation-into-emacsd)
-        - [Alternative: Installation in `~/.minimal-emacs.d`](#alternative-installation-in-minimal-emacsd)
-    - [Update minimal-emacs.d](#update-minimal-emacsd)
-    - [Customizations](#customizations)
-        - [How to customize early-init.el and init.el?](#how-to-customize-early-initel-and-initel)
-        - [How to enable the menu-bar, the tool-bar, dialogs, the contextual menu, and tooltips?](#how-to-enable-the-menu-bar-the-tool-bar-dialogs-the-contextual-menu-and-tooltips)
-        - [Reducing clutter in `~/.emacs.d` by redirecting files to `~/emacs.d/var/`](#reducing-clutter-in-emacsd-by-redirecting-files-to-emacsdvar)
-        - [How to activate recentf, savehist, saveplace, and auto-revert?](#how-to-activate-recentf-savehist-saveplace-and-auto-revert)
-        - [Optimization: Native Compilation](#optimization-native-compilation)
-        - [How to configure vterm](#how-to-configure-vterm)
-        - [How to configure Vertico, Consult, and Embark](#how-to-configure-vertico-consult-and-embark)
-        - [How to configure Vim keybindings using Evil?](#how-to-configure-vim-keybindings-using-evil)
-        - [Configuring LSP Servers with Eglot (built-in)](#configuring-lsp-servers-with-eglot-built-in)
-        - [Code completion with corfu](#code-completion-with-corfu)
-        - [How to configure straight.el?](#how-to-configure-straightel)
-        - [How to configure elpaca (package manager)](#how-to-configure-elpaca-package-manager)
-        - [Which other customizations can be interesting to add?](#which-other-customizations-can-be-interesting-to-add)
-    - [Frequently asked questions](#frequently-asked-questions)
-        - [How to increase gc-cons-threshold?](#how-to-increase-gc-cons-threshold)
-        - [How to change the outline-mode or outline-minor-mode Ellipsis (...) to (▼)?](#how-to-change-the-outline-mode-or-outline-minor-mode-ellipsis--to-)
-        - [How to make minimal-emacs.d use an environment variable to change ~/.emacs.d to another directory?](#how-to-make-minimal-emacsd-use-an-environment-variable-to-change-emacsd-to-another-directory)
-        - [Are post-early-init.el and pre-init.el the same file in terms of the logic?](#are-post-early-initel-and-pre-initel-the-same-file-in-terms-of-the-logic)
-        - [Why the reflexive disabling of the menu bar?](#why-the-reflexive-disabling-of-the-menu-bar)
-        - [Why did the author develop minimal-emacs.d?](#why-did-the-author-develop-minimal-emacsd)
-        - [How to keep minimal-emacs.d pre-\*.el and post-\*.el files in a separate directory?](#how-to-keep-minimal-emacsd-pre-el-and-post-el-files-in-a-separate-directory)
-    - [Features](#features)
-    - [Author and license](#author-and-license)
-    - [Links](#links)
+  - [Install minimal-emacs.d](#install-minimal-emacsd)
+    - [Install minimal-emacs.d into `~/.emacs.d`](#install-minimal-emacsd-into-emacsd)
+    - [Alternative: Install minimal-emacs.d into `~/.minimal-emacs.d`](#alternative-install-minimal-emacsd-into-minimal-emacsd)
+  - [Update minimal-emacs.d](#update-minimal-emacsd)
+  - [Customizations](#customizations)
+    - [Never modify init.el and early-init.el. Modify these instead...](#never-modify-initel-and-early-initel-modify-these-instead)
+    - [How to enable the menu-bar, the tool-bar, dialogs, the contextual menu, and tooltips?](#how-to-enable-the-menu-bar-the-tool-bar-dialogs-the-contextual-menu-and-tooltips)
+    - [Compile-Angel - Speed up Emacs by Automatically Byte-compiling and Native-compiling all .el files](#compile-angel---speed-up-emacs-by-automatically-byte-compiling-and-native-compiling-all-el-files)
+    - [Reducing clutter in `~/.emacs.d` by redirecting files to `~/emacs.d/var/`](#reducing-clutter-in-emacsd-by-redirecting-files-to-emacsdvar)
+    - [How to activate recentf, savehist, saveplace, and auto-revert?](#how-to-activate-recentf-savehist-saveplace-and-auto-revert)
+    - [Optimization: Native Compilation](#optimization-native-compilation)
+    - [How to configure vterm](#how-to-configure-vterm)
+    - [How to configure Vertico, Consult, and Embark](#how-to-configure-vertico-consult-and-embark)
+    - [How to configure Vim keybindings using Evil?](#how-to-configure-vim-keybindings-using-evil)
+    - [Configuring LSP Servers with Eglot (built-in)](#configuring-lsp-servers-with-eglot-built-in)
+    - [Code completion with corfu](#code-completion-with-corfu)
+    - [How to configure straight.el?](#how-to-configure-straightel)
+    - [How to configure elpaca (package manager)](#how-to-configure-elpaca-package-manager)
+    - [Which other customizations can be interesting to add?](#which-other-customizations-can-be-interesting-to-add)
+  - [Frequently asked questions](#frequently-asked-questions)
+    - [How to load a local lisp file for machine-specific customizations?](#how-to-load-a-local-lisp-file-for-machine-specific-customizations)
+    - [How to increase gc-cons-threshold?](#how-to-increase-gc-cons-threshold)
+    - [How to change the outline-mode or outline-minor-mode Ellipsis (...) to (▼)?](#how-to-change-the-outline-mode-or-outline-minor-mode-ellipsis--to-)
+    - [How to make minimal-emacs.d use an environment variable to change ~/.emacs.d to another directory?](#how-to-make-minimal-emacsd-use-an-environment-variable-to-change-emacsd-to-another-directory)
+    - [Are post-early-init.el and pre-init.el the same file in terms of the logic?](#are-post-early-initel-and-pre-initel-the-same-file-in-terms-of-the-logic)
+    - [Why the reflexive disabling of the menu bar?](#why-the-reflexive-disabling-of-the-menu-bar)
+    - [Why did the author develop minimal-emacs.d?](#why-did-the-author-develop-minimal-emacsd)
+    - [How to keep minimal-emacs.d pre-\*.el and post-\*.el files in a separate directory?](#how-to-keep-minimal-emacsd-pre-el-and-post-el-files-in-a-separate-directory)
+    - [How to make *minimal-emacs.d* install packages in the early-init phase instead of the init phase?](#how-to-make-minimal-emacsd-install-packages-in-the-early-init-phase-instead-of-the-init-phase)
+    - [Are there any comments from users?](#are-there-any-comments-from-users)
+  - [Features](#features)
+  - [Author and license](#author-and-license)
+  - [Links](#links)
 
 <!-- markdown-toc end -->
 
 ## Install minimal-emacs.d
 
-### Installation into ~/.emacs.d
+- **Important:** Ensure that the *~/.emacs* and *~/.emacs.el* files do not exist. These files takes precedence over *init.el*, causing Emacs to ignore the *init.el* file that is in the *~/.emacs.d/* directory or any other directory specified with the *--init-directory* Emacs command-line argument. This behavior is due to the way Emacs searches for initialization files ([more information](https://www.gnu.org/software/emacs/manual/html_node/emacs/Find-Init.html#Find-Init)). **Simply delete the *~/.emacs* and *~/.emacs.el* files avoid this issue.**
+- Prerequisite: git
 
-Execute the following command to clone this repository into `~/.emacs.d`:
+### Install minimal-emacs.d into `~/.emacs.d`
+
+Execute the following command install this repository into `~/.emacs.d`:
 ```
 git clone https://github.com/jamescherti/minimal-emacs.d ~/.emacs.d
 ```
 
-### Alternative: Installation in `~/.minimal-emacs.d`
+### Alternative: Install minimal-emacs.d into `~/.minimal-emacs.d`
 
-To install `minimal-emacs.d` in a non-default directory, use the `--init-directory` Emacs option to specify your desired configuration path. For example, to install `minimal-emacs.d` in `~/.minimal-emacs.d/`, follow these steps:
+To install *minimal-emacs.d* in a non-default directory, use the `--init-directory` Emacs option to specify your desired configuration path. For example, to install *minimal-emacs.d* in `~/.minimal-emacs.d/`, follow these steps:
 
 1. Clone the repository into `~/.minimal-emacs.d/` using:
    ```
@@ -83,8 +88,8 @@ git -C ~/.emacs.d pull
 
 ## Customizations
 
-### How to customize early-init.el and init.el?
-The `init.el` and `early-init.el` files should never be modified directly because they are intended to be managed by Git during an update.
+### Never modify init.el and early-init.el. Modify these instead...
+**The `init.el` and `early-init.el` files should never be modified directly** because they are intended to be managed by Git during an update.
 
 The minimal-emacs.d init files support additional customization files that are loaded at different stages of the Emacs startup process. These files allow you to further customize the initialization sequence:
 
@@ -115,6 +120,36 @@ To customize your Emacs setup to include various user interface elements, you ca
 
 These settings control the visibility of dialogs, context menus, toolbars, menu bars, and tooltips.
 
+### Compile-Angel - Speed up Emacs by Automatically Byte-compiling and Native-compiling all .el files
+
+The [compile-angel.el](https://github.com/jamescherti/compile-angel.el) package automatically byte-compiles and native-compiles Emacs Lisp libraries. It offers:
+- `(compile-angel-on-load-mode)`: A global mode that compiles .el files before they are loaded.
+- `(compile-angel-on-save-local-mode)`: A local mode that compiles .el files whenever the user saves them.
+
+The *compile-angel* modes **speed up Emacs by ensuring all libraries are byte-compiled and native-compiled**. Byte-compilation reduces the overhead of loading Emacs Lisp code at runtime, while native compilation optimizes performance by generating machine code specific to your system.
+
+To install compile-angel, add the following code **at the very beginning of your ~/.emacs.d/post-init.el init.el file, before all other packages**:
+```emacs-lisp
+(use-package compile-angel
+  :ensure t
+  :demand t
+  :config
+  (compile-angel-on-load-mode)
+  (add-hook 'emacs-lisp-mode-hook #'compile-angel-on-save-local-mode))
+```
+
+It is also highly recommended to set the following variables **at the very beginning of your post-init.el**:
+
+``` emacs-lisp
+;; Ensure Emacs loads the most recent byte-compiled files.
+(setq load-prefer-newer t)
+
+;; Ensure JIT compilation is enabled for improved performance by
+;; native-compiling loaded .elc files asynchronously
+(setq native-comp-jit-compilation t)
+(setq native-comp-deferred-compilation t) ; Deprecated in Emacs > 29.1
+```
+
 ### Reducing clutter in `~/.emacs.d` by redirecting files to `~/emacs.d/var/`
 
 Emacs, by default, stores various configuration files, caches, backups, and other data in the `~/.emacs.d` directory. Over time, this directory can become cluttered with numerous files, making it difficult to manage and maintain.
@@ -136,7 +171,7 @@ To prevent Emacs from saving customization information to a custom file, set `cu
 
 ### How to activate recentf, savehist, saveplace, and auto-revert?
 
-The recentf, savehist, saveplace, and auto-revert built-in packages are already configured by `minimal-emacs.d`. All you need to do is activate them by adding the following to `~/.emacs.d/post-init.el`:
+The recentf, savehist, saveplace, and auto-revert built-in packages are already configured by *minimal-emacs.d*. All you need to do is activate them by adding the following to `~/.emacs.d/post-init.el`:
 ``` emacs-lisp
 ;; Auto-revert in Emacs is a feature that automatically updates the
 ;; contents of a buffer to reflect changes made to the underlying file
@@ -648,9 +683,20 @@ It is also recommended to read the following articles:
 
 ## Frequently asked questions
 
+### How to load a local lisp file for machine-specific customizations?
+
+Add the following line to the end of your `post-init.el` file:
+```lisp
+(minimal-emacs-load-user-init "local.el")
+```
+
+This allows `local.el` to load, enabling custom configurations specific to the machine.
+
+(Ensure that `local.el` is in the same directory as `post-init.el`.)
+
 ### How to increase gc-cons-threshold?
 
-Add the following to `~/.emacs.d/pre-early-init.el` to ensure that `minimal-emacs.d` restores the specified amount after startup:
+Add the following to `~/.emacs.d/pre-early-init.el` to ensure that *minimal-emacs.d* restores the specified amount after startup:
 ``` emacs-lisp
 (setq minimal-emacs-gc-cons-threshold (* 64 1024 1024))
 ```
@@ -661,7 +707,7 @@ If you want to to change the outline-mode or outline-minor-mode Ellipsis (...) t
 
 ### How to make minimal-emacs.d use an environment variable to change ~/.emacs.d to another directory?
 
-Add the following to the top of the `~/.emacs.d/pre-early-init.el` file to make `minimal-emacs.d` use the `MINIMAL_EMACS_USER_DIRECTORY` environment variable to change `~/.emacs.d` to another directory:
+Add the following to the top of the `~/.emacs.d/pre-early-init.el` file to make *minimal-emacs.d* use the `MINIMAL_EMACS_USER_DIRECTORY` environment variable to change `~/.emacs.d` to another directory:
 ```emacs-lisp
 ;; Place this at the very beginning of pre-early-init.el
 (let ((previous-minimal-emacs-user-directory (expand-file-name
@@ -684,7 +730,7 @@ Thus, `post-early-init.el` and `pre-init.el` serve different purposes and are no
 
 ### Why the reflexive disabling of the menu bar?
 
-The menu bar is disabled by default in `minimal-emacs.d` to provide a minimal, distraction-free environment, which many experienced users prefer.
+The menu bar is disabled by default in *minimal-emacs.d* to provide a minimal, distraction-free environment, which many experienced users prefer.
 
 The menu bar can be re-enabled by adding the following configuration to `~/.emacs.d/pre-early-init.el`:
 ```
@@ -702,12 +748,43 @@ The author began working on it after realizing that no existing starter kit offe
 
 ### How to keep minimal-emacs.d pre-\*.el and post-\*.el files in a separate directory?
 
-To ensure the `minimal-emacs.d` configuration loads `post-early-init.el`, `pre-init.el`, and `post-init.el` from a different directory, such as `~/.config/minimal-emacs.d/`, modify the `minimal-emacs-user-directory` variable by adding the following to your `~/.emacs.d/pre-early-init.el` file:
+To ensure the *minimal-emacs.d* configuration loads `post-early-init.el`, `pre-init.el`, and `post-init.el` from a different directory, such as `~/.config/minimal-emacs.d/`, modify the `minimal-emacs-user-directory` variable by adding the following to your `~/.emacs.d/pre-early-init.el` file:
 ```elisp
 (setq minimal-emacs-user-directory "~/.config/minimal-emacs.d/")
 ```
 
-This will ensure that the `minimal-emacs.d` configuration loads `post-early-init.el`, `pre-init.el`, and `post-init.el` from `~/.config/minimal-emacs.d/`.
+This will ensure that the *minimal-emacs.d* configuration loads `post-early-init.el`, `pre-init.el`, and `post-init.el` from `~/.config/minimal-emacs.d/`.
+
+### How to make *minimal-emacs.d* install packages in the early-init phase instead of the init phase?
+
+To install and load packages during the early-init phase, add the following to `post-early-init.el`:
+
+```elisp
+(setq minimal-emacs-package-initialize-and-refresh nil)
+
+;; If you want to ignore the warning:
+;; "Warning (package): Unnecessary call to package-initialize in init file."
+;; Uncomment the following setq:
+;; (setq warning-suppress-types '((package)))
+
+;; Initialize packages in the early-init phase instead of init
+(progn
+  (package-initialize)
+  (unless package-archive-contents
+    (package-refresh-contents))
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
+  (eval-when-compile
+    (require 'use-package)))
+
+;; TODO: Add your use-package code here
+```
+
+A drawback of using the early-init phase instead of init is that if a package fails (e.g, due to a network issue), no output will be displayed in the Emacs GUI. You will need to open a terminal to view Emacs's stdout for error messages.
+
+### Are there any comments from users?
+
+A [user commented on Reddit](https://www.reddit.com/r/emacs/comments/1feaf37/comment/lmw7ijd/) that after switching to *minimal-emacs.d*, their configuration execution time decreased from 3 seconds to just 1 second by simply replacing their `init.el` and `early-init.el` files with those from the project. Please [send me](https://www.jamescherti.com/contact/) your feedback and I'll add it to this README.md file.
 
 ## Features
 
@@ -756,7 +833,7 @@ This will ensure that the `minimal-emacs.d` configuration loads `post-early-init
 
 ## Author and license
 
-The `minimal-emacs.d` project has been written by [James Cherti](https://www.jamescherti.com/) and is distributed under terms of the GNU General Public License version 3, or, at your choice, any later version.
+The *minimal-emacs.d* project has been written by [James Cherti](https://www.jamescherti.com/) and is distributed under terms of the GNU General Public License version 3, or, at your choice, any later version.
 
 Copyright (C) 2024 [James Cherti](https://www.jamescherti.com)
 
@@ -779,7 +856,7 @@ Other Emacs packages by the same author:
 - [Ultyas](https://github.com/jamescherti/ultyas/): A command-line tool designed to simplify the process of converting code snippets from UltiSnips to YASnippet format.
 - [dir-config.el](https://github.com/jamescherti/dir-config.el): Automatically find and evaluate .dir-config.el Elisp files to configure directory-specific settings.
 - [flymake-bashate.el](https://github.com/jamescherti/flymake-bashate.el): A package that provides a Flymake backend for the bashate Bash script style checker.
-- [flymake-ansible-lint.el](https://github.com/jamescherti/flymake-ansible-lint.el): An Emacs package that offers a Flymake backend for `ansible-lint`.
-- [compile-angel.el](https://github.com/jamescherti/compile-angel.el): An Emacs package that automatically compiles Emacs loaded or saved Elisp libraries. This lightweight alternative to `auto-compile` not only compiles Elisp files loaded with `load` and `require`, but also handles deferred and autoloaded files.
-- [inhibit-mouse.el](https://github.com/jamescherti/inhibit-mouse.el): A package that disables mouse input in Emacs, offering a simpler and faster alternative to the `disable-mouse` package.
+- [flymake-ansible-lint.el](https://github.com/jamescherti/flymake-ansible-lint.el): An Emacs package that offers a Flymake backend for ansible-lint.
+- [compile-angel.el](https://github.com/jamescherti/compile-angel.el): An Emacs package that automatically compiles Emacs loaded or saved Elisp libraries. This lightweight alternative to auto-compile not only compiles Elisp files loaded with load and require, but also handles deferred and autoloaded files.
+- [inhibit-mouse.el](https://github.com/jamescherti/inhibit-mouse.el): A package that disables mouse input in Emacs, offering a simpler and faster alternative to the disable-mouse package.
 - [quick-sdcv.el](https://github.com/jamescherti/quick-sdcv.el): This package enables Emacs to function as an offline dictionary by using the sdcv command-line tool directly within Emacs.
