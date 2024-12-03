@@ -14,7 +14,7 @@ The author is using **[minimal-emacs.d](https://github.com/jamescherti/minimal-e
 (The optimizations in *minimal-emacs.d* significantly contribute to speeding up Emacs startup. Additional factors include deferring package loading when not necessary on startup by using `:defer t` with `use-package`, and using [compile-angel](https://github.com/jamescherti/compile-angel.el) to ensure all `.el` files are byte-compiled and native-compiled. The author also regularly uses `M-x list-timers` and `M-x describe-mode` for each file type to ensure only essential modes and timers are active, which helps optimize Emacs' performance)
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
-**Table of Contents**
+## Table of Contents
 
 - [Minimal ~/.emacs.d - Vanilla Emacs Configuration with Better Defaults and Optimized Startup](#minimal-emacsd---vanilla-emacs-configuration-with-better-defaults-and-optimized-startup)
   - [Install minimal-emacs.d](#install-minimal-emacsd)
@@ -37,7 +37,8 @@ The author is using **[minimal-emacs.d](https://github.com/jamescherti/minimal-e
     - [How to configure elpaca (package manager)](#how-to-configure-elpaca-package-manager)
     - [Which other customizations can be interesting to add?](#which-other-customizations-can-be-interesting-to-add)
   - [Frequently asked questions](#frequently-asked-questions)
-    - [How to load a local lisp file for machine-specific customizations?](#how-to-load-a-local-lisp-file-for-machine-specific-customizations)
+    - [How to load a local lisp file for machine-specific configurations?](#how-to-load-a-local-lisp-file-for-machine-specific-configurations)
+    - [How to load Emacs customizations?](#how-to-load-emacs-customizations)
     - [How to increase gc-cons-threshold?](#how-to-increase-gc-cons-threshold)
     - [How to change the outline-mode or outline-minor-mode Ellipsis (...) to (▼)?](#how-to-change-the-outline-mode-or-outline-minor-mode-ellipsis--to-)
     - [How to make minimal-emacs.d use an environment variable to change ~/.emacs.d to another directory?](#how-to-make-minimal-emacsd-use-an-environment-variable-to-change-emacsd-to-another-directory)
@@ -258,6 +259,12 @@ Add the following to `~/.emacs.d/post-init.el` to set up Vertico, Consult, and E
   ;; directly from the completion interface.
   :ensure t
   :defer t
+  :commands (embark-act
+             embark-dwim
+             embark-export
+             embark-collect
+             embark-bindings
+             embark-prefix-help-command)
   :bind
   (("C-." . embark-act)         ;; pick some comfortable binding
    ("C-;" . embark-dwim)        ;; good alternative: M-.
@@ -652,11 +659,13 @@ To configure `corfu` and `cape`, add the following to `~/.emacs.d/post-init.el`:
   :config
   (which-key-mode))
 
-(pixel-scroll-precision-mode)
+(setq pixel-scroll-precision-use-momentum nil)
+(pixel-scroll-precision-mode 1)
 
 (display-time-mode)
 (show-paren-mode +1)  ; Paren match highlighting
 (winner-mode 1)
+(delete-selection-mode 1)  ; Replace selected text with typed text
 (pixel-scroll-precision-mode 1)
 
 ;; Configure Emacs to ask for confirmation before exiting
@@ -683,7 +692,7 @@ It is also recommended to read the following articles:
 
 ## Frequently asked questions
 
-### How to load a local lisp file for machine-specific customizations?
+### How to load a local lisp file for machine-specific configurations?
 
 Add the following line to the end of your `post-init.el` file:
 ```lisp
@@ -693,6 +702,14 @@ Add the following line to the end of your `post-init.el` file:
 This allows `local.el` to load, enabling custom configurations specific to the machine.
 
 (Ensure that `local.el` is in the same directory as `post-init.el`.)
+
+### How to load Emacs customizations?
+
+To load customizations saved by Emacs (`M-x customize`), add the following code snippet to the `post-init.el` file. This ensures that the custom file, typically set to a separate file for user preferences, is loaded without errors or messages during startup:
+
+```elisp
+(load custom-file 'noerror 'nomessage)
+```
 
 ### How to increase gc-cons-threshold?
 
@@ -784,7 +801,11 @@ A drawback of using the early-init phase instead of init is that if a package fa
 
 ### Are there any comments from users?
 
-A [user commented on Reddit](https://www.reddit.com/r/emacs/comments/1feaf37/comment/lmw7ijd/) that after switching to *minimal-emacs.d*, their configuration execution time decreased from 3 seconds to just 1 second by simply replacing their `init.el` and `early-init.el` files with those from the project. Please [send me](https://www.jamescherti.com/contact/) your feedback and I'll add it to this README.md file.
+- [Leading_Ad6415 commented on Reddit](https://www.reddit.com/r/emacs/comments/1feaf37/comment/lmw7ijd/) that after switching to *minimal-emacs.d*, their configuration execution time decreased from 3 seconds to just 1 second by simply replacing their `init.el` and `early-init.el` files with those from the project.
+- [Another user commented on Reddit](https://www.reddit.com/r/emacs/comments/1feaf37/comment/lrsfd64/), highlighting how a minimal-emacs.d significantly enhanced their Emacs performance. They reported substantial startup time reductions on both their main machine (from ~2.25 to ~0.95 seconds) and an older laptop (from ~2.95 to ~1.27 seconds) while also experiencing a generally snappier performance within Emacs. The user expressed gratitude for the project, calling it fantastic.
+- [Cyneox commented on Reddit](https://www.reddit.com/r/emacs/comments/1gh687a/comment/lwdv18t/), expressing gratitude for the resource and sharing their experience. They mentioned it was their fourth attempt to set up a vanilla configuration and highlighted that they had been using the repository as a foundation for their customizations over the past few days. They appreciated the absence of unexplained behavior and the clear instructions on where to place files. The user reported successful testing on both Linux and macOS, noting that everything functioned smoothly, including in the terminal.
+
+Please [send me](https://www.jamescherti.com/contact/) your feedback and I'll add it to this README.md file.
 
 ## Features
 
@@ -860,3 +881,4 @@ Other Emacs packages by the same author:
 - [flymake-ansible-lint.el](https://github.com/jamescherti/flymake-ansible-lint.el): An Emacs package that offers a Flymake backend for ansible-lint.
 - [inhibit-mouse.el](https://github.com/jamescherti/inhibit-mouse.el): A package that disables mouse input in Emacs, offering a simpler and faster alternative to the disable-mouse package.
 - [quick-sdcv.el](https://github.com/jamescherti/quick-sdcv.el): This package enables Emacs to function as an offline dictionary by using the sdcv command-line tool directly within Emacs.
+- [enhanced-evil-paredit.el](https://github.com/jamescherti/enhanced-evil-paredit.el): An Emacs package that prevents parenthesis imbalance when using *evil-mode* with *paredit*. It intercepts *evil-mode* commands such as delete, change, and paste, blocking their execution if they would break the parenthetical structure.

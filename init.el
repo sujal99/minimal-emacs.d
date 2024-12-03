@@ -384,7 +384,12 @@
 
 (setq sh-indent-after-continuation 'always)
 
-(setq dired-clean-confirm-killing-deleted-buffers nil
+;;; Dired
+
+(setq dired-free-space nil
+      dired-deletion-confirmer 'y-or-n-p
+      dired-filter-verbose nil
+      dired-clean-confirm-killing-deleted-buffers nil
       dired-recursive-deletes 'top
       dired-recursive-copies  'always
       dired-create-destination-dirs 'ask)
